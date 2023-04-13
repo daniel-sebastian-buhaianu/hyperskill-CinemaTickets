@@ -1,51 +1,46 @@
 import java.util.Scanner
 
 val MAX_ROWS = 9
-val MAX_COLUMNS = 9
+val MAX_SEATS_PER_ROW = 9
 
 val SEATS = mutableListOf<MutableList<Array<String>>>()
 
 fun main() {
 
-    // Get input from user
-    val userInput = getUserInput()
-
+    val rows = getInt("Enter the number of rows:")
+    val seatsPerRow = getInt("Enter the number of seats in each row:")
     // Ensure proper usage
-    if (!isUserInputValid(userInput)) {
-        println("ERRO!")
-        println("Maximum number of rows allowed: ${MAX_ROWS}")
-        println("Maximum number of seats per row allowed: ${MAX_COLUMNS}")
-        return
-    }
+    if (!isInputValid(rows, seatsPerRow)) return
 
-    val rows = userInput.first()
-    val columns = userInput.last()
+    initializeSeats(rows, seatsPerRow)
+    printSeats(rows, seatsPerRow)
 
-    initializeSeats(rows, columns)
+    val targetRow = getInt("Enter a row number:")
+    val targetSeat = getInt("Enter a seat number in that row:")
+    // Ensure proper usage
+    if (!isInputValid(targetRow, targetSeat)) return
 
-    printSeats(rows, columns)
-}
-
-fun getUserInput(): List<Int> {
+    println("\nTicket price: $${SEATS[targetRow-1][targetSeat-1][1]}")
     
-    val reader = Scanner(System.`in`)
+    SEATS[targetRow-1][targetSeat-1][0] = "B"
 
-    println("Enter the number of rows:")
-    print("> ")
-    val rowsCount: Int = reader.nextInt()
-
-    println("Enter the number of seats in each row:")
-    print("> ")
-    val seatsPerRow: Int = reader.nextInt()
-
-    val userInput: List<Int> = listOf(rowsCount, seatsPerRow)
-    return userInput
+    printSeats(rows, seatsPerRow)
 }
 
-fun isUserInputValid(userInput: List<Int>): Boolean {
-    if (userInput[0] > MAX_ROWS) return false
-    if (userInput[1] > MAX_COLUMNS) return false
-    return true
+fun getInt(text: String): Int {
+    val reader = Scanner(System.`in`)
+    println(text)
+    print("> ")
+    return reader.nextInt()
+}
+
+fun isInputValid(x: Int, y: Int): Boolean {
+    if (x > MAX_ROWS || y > MAX_SEATS_PER_ROW) {
+        println("ERROR")
+        println("Max rows: ${MAX_ROWS}\nMax seats/row: ${MAX_SEATS_PER_ROW}")
+        return false
+    }
+    return true 
 }
 
 fun initializeSeats(rows: Int, columns: Int) {
@@ -92,4 +87,5 @@ fun printSeats(rows: Int, columns: Int) {
         }
         println()
     }
+    println()
 }
